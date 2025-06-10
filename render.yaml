@@ -4,8 +4,8 @@ services:
     name: jitsi-web
     env: image
     image:
-      url: jitsi/web
-    plan: free # Explicitly set to free
+      url: jitsi/web:stable-9149 # VERSION TAG ADDED
+    plan: free
     healthCheckPath: /
     envVars:
       - key: PUBLIC_URL
@@ -32,8 +32,8 @@ services:
     name: jitsi-jvb
     env: image
     image:
-      url: jitsi/jvb
-    plan: free # Explicitly set to free
+      url: jitsi/jvb:stable-9149 # VERSION TAG ADDED
+    plan: free
     envVars:
       - key: XMPP_SERVER
         value: jitsi-prosody
@@ -51,8 +51,8 @@ services:
     name: jitsi-prosody
     env: image
     image:
-      url: jitsi/prosody
-    plan: free # Explicitly set to free
+      url: jitsi/prosody:stable-9149 # VERSION TAG ADDED
+    plan: free
     envVars:
       - key: XMPP_DOMAIN
         value: ${RENDER_EXTERNAL_HOSTNAME}
@@ -66,8 +66,8 @@ services:
     name: jitsi-jicofo
     env: image
     image:
-      url: jitsi/jicofo
-    plan: free # Explicitly set to free
+      url: jitsi/jicofo:stable-9149 # VERSION TAG ADDED
+    plan: free
     envVars:
       - key: XMPP_SERVER
         value: jitsi-prosody
