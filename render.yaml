@@ -2,17 +2,18 @@ services:
   - type: web
     name: jitsi-private-chat
     env: docker
-    repo: https://github.com/jitsi/docker-jitsi-meet # This will be automatically replaced by your repo
-    plan: starter # Free plan can be slow. 'Starter' ($7/mo) is recommended for good call quality.
+    plan: free # This is the key change for the free tier
     healthCheckPath: /
+    # Free tier instances spin down after 15 minutes of inactivity.
+    # A new request will spin them back up, which can take 30-60 seconds.
     envVars:
       - key: PUBLIC_URL
-        value: https://${RENDER_EXTERNAL_HOSTNAME} # Correct way to set the full URL
+        value: https://${RENDER_EXTERNAL_HOSTNAME}
       - key: DOCKER_HOST_ADDRESS
         fromService:
           type: web
           name: jitsi-private-chat
-          property: host # This gets the internal network address, which is correct here
+          property: host
       - key: TZ
         value: Etc/UTC # Or your timezone, e.g., America/New_York
       
