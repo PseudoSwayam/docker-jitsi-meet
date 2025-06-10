@@ -1,30 +1,75 @@
 services:
+  # The Public Web Service (What you see in the browser)
   - type: web
-    name: jitsi-private-chat
-    env: docker
-    plan: free # This is the key change for the free tier
+    name: jitsi-web # The main service name
+    env: image
+    image:
+      url: jitsi/web
+    plan: free
     healthCheckPath: /
-    # Free tier instances spin down after 15 minutes of inactivity.
-    # A new request will spin them back up, which can take 30-60 seconds.
     envVars:
       - key: PUBLIC_URL
         value: https://${RENDER_EXTERNAL_HOSTNAME}
-      - key: DOCKER_HOST_ADDRESS
-        fromService:
-          type: web
-          name: jitsi-private-chat
-          property: host
+      - key: XMPP_SERVER
+        value: jitsi-prosody # Tells the web service how to find the user server
+      - key: XMPP_DOMAIN
+        value: ${RENDER_EXTERNAL_HOSTNAME}
+      - key: XMPP_BOSH_URL_BASE
+        value: http://jitsi-prosody:5280
+      - key: JICOFO_AUTH_USER
+        value: jicofo
       - key: TZ
-        value: Etc/UTC # Or your timezone, e.g., America/New_York
-      
-      # --- IMPORTANT PRIVACY SETTINGS ---
+        value: Etc/UTC
+      # --- PRIVACY SETTINGS ---
       - key: ENABLE_AUTH
         value: "1"
       - key: ENABLE_GUESTS
         value: "0"
       - key: AUTH_TYPE
         value: internal
-      
-      # --- Other Jitsi settings ---
+
+  # The Video Bridge (Handles video streams)
+  - type: pserv # Private Service (not accessible from the internet)
+    name: jitsi-jvb
+    env: image
+    image:
+      url: jitsi/jvb
+    envVars:
+      - key: XMPP_SERVER
+        value: jitsi-prosody
+      - key: XMPP_DOMAIN
+        value: ${RENDER_EXTERNAL_HOSTNAME}
+      - key: JVB_AUTH_USER
+        value: jvb
       - key: JVB_STUN_SERVERS
         value: "stun.l.google.com:19302,stun.jitsi.net:4443"
+      - key: JICOFO_AUTH_USER
+        value: jicofo
+
+  # The User/Authentication Server
+  - type: pserv # Private Service
+    name: jitsi-prosody
+    env: image
+    image:
+      url: jitsi/prosody
+    envVars:
+      - key: XMPP_DOMAIN
+        value: ${RENDER_EXTERNAL_HOSTNAME}
+      - key: JICOFO_AUTH_USER
+        value: jicofo
+      - key: JVB_AUTH_USER
+        value: jvb
+
+  # The Conference Manager
+  - type: pserv # Private Service
+    name: jitsi-jicofo
+    env: image
+    image:
+      url: jitsi/jicofo
+    envVars:
+      - key: XMPP_SERVER
+        value: jitsi-prosody
+      - key: XMPP_DOMAIN
+        value: ${RENDER_EXTERNAL_HOSTNAME}
+      - key: JICOFO_AUTH_USER
+        value: jicofo
