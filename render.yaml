@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: jitsi-private-chat
+    env: docker
+    repo: https://github.com/jitsi/docker-jitsi-meet # This will be automatically replaced by your repo
+    plan: starter # Free plan might be too slow; 'Starter' is recommended for stability.
+    healthCheckPath: /
+    envVars:
+      - key: PUBLIC_URL
+        fromService:
+          type: web
+          name: jitsi-private-chat
+          property: url
+      - key: DOCKER_HOST_ADDRESS
+        fromService:
+          type: web
+          name: jitsi-private-chat
+          property: host
+      - key: TZ
+        value: Etc/UTC # Or your timezone, e.g., America/New_York
+      
+      # --- IMPORTANT PRIVACY SETTINGS ---
+      - key: ENABLE_AUTH
+        value: 1 # Enables authentication
+      - key: ENABLE_GUESTS
+        value: 0 # Disables anonymous access
+      - key: AUTH_TYPE
+        value: internal # Use internal user accounts
+      
+      # --- Other Jitsi settings ---
+      - key: JVB_STUN_SERVERS
+        value: "stun.l.google.com:19302,stun.jitsi.net:4443"
