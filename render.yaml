@@ -4,7 +4,7 @@ services:
     name: jitsi-web
     env: image
     image:
-      url: jitsi/web:stable-9149-1 # CORRECTED VERSION TAG
+      url: jitsi/web:latest # Use the 'latest' reliable tag
     plan: free
     healthCheckPath: /
     envVars:
@@ -32,7 +32,7 @@ services:
     name: jitsi-jvb
     env: image
     image:
-      url: jitsi/jvb:stable-9149-1 # CORRECTED VERSION TAG
+      url: jitsi/jvb:latest # Use the 'latest' reliable tag
     plan: free
     envVars:
       - key: XMPP_SERVER
@@ -51,7 +51,7 @@ services:
     name: jitsi-prosody
     env: image
     image:
-      url: jitsi/prosody:stable-9149-1 # CORRECTED VERSION TAG
+      url: jitsi/prosody:latest # Use the 'latest' reliable tag
     plan: free
     envVars:
       - key: XMPP_DOMAIN
@@ -66,7 +66,7 @@ services:
     name: jitsi-jicofo
     env: image
     image:
-      url: jitsi/jicofo:stable-9149-1 # CORRECTED VERSION TAG
+      url: jitsi/jicofo:latest # Use the 'latest' reliable tag
     plan: free
     envVars:
       - key: XMPP_SERVER
